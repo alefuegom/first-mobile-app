@@ -1,0 +1,7 @@
+{
+  "name": "alefuegom-first-mobile-app",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "react"
+}
