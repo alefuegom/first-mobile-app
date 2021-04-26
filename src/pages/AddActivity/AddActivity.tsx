@@ -16,8 +16,9 @@ import {
   IonInput,
   IonDatetime,
   IonButton,
+  IonToast,
 } from "@ionic/react";
-import React, { useContext, useRef } from "react";
+import React, { useContext, useRef, useState } from "react";
 import ActivitiesContext, { ActivityType } from "../../data/activities-context";
 import { useHistory } from "react-router-dom";
 const AddActivity: React.FC = () => {
@@ -25,6 +26,8 @@ const AddActivity: React.FC = () => {
   const descriptionInput = useRef<HTMLIonInputElement>(null);
   const hourInput = useRef<HTMLIonDatetimeElement>(null);
   const activityTypeInput = useRef<HTMLIonSegmentElement>(null);
+  const[toastSuccessMessage, setToastSuccessMessage ] = useState<string>('');
+  const[toastWrongMessage, setToastWrongMessage ] = useState<string>('');
 
   const context = useContext(ActivitiesContext);
   const history = useHistory();
@@ -37,10 +40,19 @@ const AddActivity: React.FC = () => {
 
     if (title && description && activityType && hour) {
       context.addActivity(title, description, hour, activityType);
+      setToastSuccessMessage("The activity has been saved ! ")
       history.replace('/all-activities');
+    }
+    else{
+      setToastWrongMessage("Must fill all the activity attributes")
+
     }
   };
   return (
+    <React.Fragment>
+    <IonToast isOpen={!!toastSuccessMessage} message={toastSuccessMessage} duration={4000} color="success" onDidDismiss={()=> setToastSuccessMessage('')}/>
+    <IonToast isOpen={!!toastWrongMessage} message={toastWrongMessage} duration={4000} color="danger" onDidDismiss={()=> setToastWrongMessage('')}/>
+
     <IonPage>
       <IonHeader>
         <IonToolbar>
@@ -108,6 +120,8 @@ const AddActivity: React.FC = () => {
         </IonGrid>
       </IonContent>
     </IonPage>
+    </React.Fragment>
+
   );
 };
 export default AddActivity;
